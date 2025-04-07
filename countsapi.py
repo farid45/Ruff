@@ -381,7 +381,8 @@ def countsapi2(tid, sdate, edatestr):
                 datadf['CAPACITY'] = datadf['CAPACITY'].astype(int)
                 sumdf = datadf.groupby(['CODE']).agg({'COUNT': 'sum'})
                 lawncapsumdf = datadf.groupby(
-                    ['CODE']).agg({'CAPACITY': 'sum'})
+                    ['CODE'],
+                ).agg({'CAPACITY': 'sum'})
                 lawncapsumdf = lawncapsumdf.loc[
                     lawncapsumdf.index.isin(['GA', 'LAWNS', 'LAWN', 'BERM'])
                 ]
@@ -407,7 +408,8 @@ def countsapi2(tid, sdate, edatestr):
                     axis=1,
                 )
                 datadf['THRESHOLD'] = datadf.apply(
-                    lambda x: threshold(x), axis=1)
+                    lambda x: threshold(x), axis=1,
+                )
                 datadf.drop_duplicates(
                     subset=['CODE', 'COUNT', 'CAPACITY', 'PRICE'],
                     keep='first',
@@ -448,7 +450,8 @@ def countsapi2(tid, sdate, edatestr):
                 datadf['PB'] = datadf.apply(lambda x: pricebreak(x), axis=1)
                 # datadf.to_csv('AfterPB.csv',index=False)
                 datadf['BROADCAST'] = datadf.apply(
-                    lambda x: broadcast(x), axis=1)
+                    lambda x: broadcast(x), axis=1,
+                )
                 # datadf.to_csv("afterBroad.csv",index=False)
                 broadresults = requests.get(
                     'https://api.blabla.com/event_listings.php?token=blabla&eventid=%s&includeTags=zone'
@@ -592,8 +595,11 @@ def countsapi2(tid, sdate, edatestr):
                 teamname + datestr + '.csv'
                 sglistdbname = (team.split('_Results')[0]) + '_SGELIST'
                 if 'Training' in team:
-                    sglistdbname = (team.split(
-                        'Training_Results')[0]) + '_SGELIST'
+                    sglistdbname = (
+                        team.split(
+                            'Training_Results',
+                        )[0]
+                    ) + '_SGELIST'
                 print('SGELIST DBNAME: ', sglistdbname)
                 sgelistdb = client[sglistdbname]
                 sgelistcol = sgelistdb[sglistdbname]
@@ -618,10 +624,12 @@ def countsapi2(tid, sdate, edatestr):
                     datadf['CAPACITY'] = datadf['CAPACITY'].astype(int)
                     sumdf = datadf.groupby(['CODE']).agg({'COUNT': 'sum'})
                     lawncapsumdf = datadf.groupby(
-                        ['CODE']).agg({'CAPACITY': 'sum'})
+                        ['CODE'],
+                    ).agg({'CAPACITY': 'sum'})
                     lawncapsumdf = lawncapsumdf.loc[
                         lawncapsumdf.index.isin(
-                            ['GA', 'LAWNS', 'LAWN', 'BERM'])
+                            ['GA', 'LAWNS', 'LAWN', 'BERM'],
+                        )
                     ]
                     lawncapsumdf.reset_index(inplace=True)
                     # lawncapsumdf.to_csv('lawncapsumdf.csv')
@@ -646,7 +654,8 @@ def countsapi2(tid, sdate, edatestr):
                         axis=1,
                     )
                     datadf['THRESHOLD'] = datadf.apply(
-                        lambda x: threshold(x), axis=1)
+                        lambda x: threshold(x), axis=1,
+                    )
                     datadf.drop_duplicates(
                         subset=['CODE', 'COUNT', 'CAPACITY', 'PRICE'],
                         keep='first',
@@ -686,10 +695,12 @@ def countsapi2(tid, sdate, edatestr):
                     datadf = datadf.merge(sizedf, how='left', on='CODE')
                     # datadf.to_csv('Aftergroupdf.csv',index=False)
                     datadf['PB'] = datadf.apply(
-                        lambda x: pricebreak(x), axis=1)
+                        lambda x: pricebreak(x), axis=1,
+                    )
                     # datadf.to_csv('AfterPB.csv',index=False)
                     datadf['BROADCAST'] = datadf.apply(
-                        lambda x: broadcast(x), axis=1)
+                        lambda x: broadcast(x), axis=1,
+                    )
                     # datadf.to_csv("afterBroad.csv",index=False)
                     broadresults = requests.get(
                         'https://api.blabla.com/event_listings.php?token=blabla&eventid=%s&includeTags=zone'
@@ -771,7 +782,8 @@ def countsapi2(tid, sdate, edatestr):
                         ).reset_index(names='CODE')
                         print(groubbydf)
                         cleandf = cleandf.merge(
-                            groubbydf, on='CODE', how='left')
+                            groubbydf, on='CODE', how='left',
+                        )
 
                         cleandf[['bgnotes', 'fpnotes', 'newbroad']] = cleandf.apply(
                             lambda x: notes(x, teamname), axis=1, result_type='expand',

@@ -78,8 +78,10 @@ def payloadconstructor(invoiceid):
             {
                 'type': 'section',
                 'fields': [
-                    {'type': 'mrkdwn',
-                        'text': '*INVOICE ID:* \n %s' % (invoiceid)},
+                    {
+                        'type': 'mrkdwn',
+                        'text': '*INVOICE ID:* \n %s' % (invoiceid),
+                    },
                     {
                         'type': 'mrkdwn',
                         'text': '*SEC:* \n %s' % (invoicerow['section'].values.item()),

@@ -216,7 +216,8 @@ def create_app():
         elistdf = pd.DataFrame(elist)
 
         elistdf['Awayteam'] = elistdf['ENAME'].apply(
-            lambda x: str(x).split(' at ')[0])
+            lambda x: str(x).split(' at ')[0],
+        )
 
         ateamunique = elistdf['Awayteam'].unique().tolist()
         print(ateamunique)
@@ -255,7 +256,8 @@ def create_app():
 
         elistdf = pd.DataFrame(elist)
         elistdf['Awayteam'] = elistdf['ENAME'].apply(
-            lambda x: str(x).split(' at ')[0])
+            lambda x: str(x).split(' at ')[0],
+        )
         teamdf = elistdf[elistdf['Awayteam'].isin([ateam])]
         print(teamdf)
         schedarr = teamdf['EDATE'].to_list()
@@ -524,7 +526,8 @@ def create_app():
             mapresults = mapcol.find_one({})
             mapdf = pd.DataFrame(mapresults['mapdata'])
             broaddf = broaddf.merge(
-                mapdf, left_on='section', right_on='SK CODE')
+                mapdf, left_on='section', right_on='SK CODE',
+            )
 
             broaddf.drop(columns=['DESC', 'SG ROW START'], inplace=True)
             broaddf.rename({'SG CODE': 'section_match'}, inplace=True, axis=1)
@@ -575,8 +578,11 @@ def create_app():
             'sgmaxseat',
             'sgminseat',
         ]
-        datadf.drop(columns=datadf.columns.difference(
-            colstokeep), axis=1, inplace=True)
+        datadf.drop(
+            columns=datadf.columns.difference(
+                colstokeep,
+            ), axis=1, inplace=True,
+        )
         datadf['SECTION_NAME'] = datadf['SECTION_NAME'].convert_dtypes()
         broaddf['section_match'] = broaddf['section_match'].convert_dtypes()
         datadf['maxseat'] = datadf['sgmaxseat']
@@ -605,8 +611,10 @@ def create_app():
             left_on=['section_match', 'maxseat', 'minseat'],
         )
         balancedf.fillna('NA', inplace=True)
-        balancedf = balancedf[balancedf['section_match']
-                              == 'NA'].reset_index(drop=True)
+        balancedf = balancedf[
+            balancedf['section_match']
+            == 'NA'
+        ].reset_index(drop=True)
         newdf = pd.concat([newdf, compdf, balancedf], ignore_index=True)
         newdf.fillna('NA', inplace=True)
         newdf.drop(
@@ -641,7 +649,8 @@ def create_app():
         sizedf = pd.DataFrame(newdf.groupby('SECTION_NAME').size())
         ownsizefilterdf = newdf.loc[newdf['Own_listing'] == 'Y']
         ownsizedf = pd.DataFrame(
-            ownsizefilterdf.groupby('SECTION_NAME').size())
+            ownsizefilterdf.groupby('SECTION_NAME').size(),
+        )
         ownsizedf.rename({0: 'OWNSIZE'}, inplace=True, axis=1)
         if ownsizedf.empty:
             datadf = pd.DataFrame(data)
@@ -687,8 +696,11 @@ def create_app():
                 'MRK',
                 'SK CODE',
             ]
-            newdf.drop(newdf.columns.difference(
-                colstokeepfinal), axis=1, inplace=True)
+            newdf.drop(
+                newdf.columns.difference(
+                    colstokeepfinal,
+                ), axis=1, inplace=True,
+            )
             colorder = [
                 'TOTAL_PRICE',
                 'FEES',
@@ -715,11 +727,17 @@ def create_app():
             newdf['bprice'] = newdf.apply(lambda x: bpricegen(x), axis=1)
             newdf['bprice'] = newdf['bprice'].astype(float)
             # newdf['floor_value'] = newdf['floor_value'].astype(float)
-            newdf.drop(['row_match', 'section_match', 'eventid'],
-                       axis=1, inplace=True)
+            newdf.drop(
+                ['row_match', 'section_match', 'eventid'],
+                axis=1, inplace=True,
+            )
 
-            newdf.drop(newdf.loc[newdf['SECTION_NAME']
-                       == 'NA'].index, inplace=True)
+            newdf.drop(
+                newdf.loc[
+                    newdf['SECTION_NAME']
+                    == 'NA'
+                ].index, inplace=True,
+            )
             lowestcomdf = newdf.groupby(['SECTION_NAME', 'Own_listing']).agg(
                 min_fv=('FACE_VALUE', 'min'), mean_fv=('FACE_VALUE', 'mean'),
             )
@@ -737,7 +755,8 @@ def create_app():
             # to find the Mrkup 2nd lowest price only if there is more than 1 count and if it is nochanges
             newdf['FACE_VALUE'] = newdf['FACE_VALUE'].astype(float)
             secondlowdf = newdf.groupby(['SECTION_NAME', 'Own_listing'])[
-                'FACE_VALUE']
+                'FACE_VALUE'
+            ]
             secondlowdf = (
                 secondlowdf.nsmallest(1, 'first')
                 .groupby(level=['SECTION_NAME', 'Own_listing'])
@@ -777,8 +796,11 @@ def create_app():
                 'MRK',
                 'SK CODE',
             ]
-            newdf.drop(newdf.columns.difference(
-                colstokeepfinal), axis=1, inplace=True)
+            newdf.drop(
+                newdf.columns.difference(
+                    colstokeepfinal,
+                ), axis=1, inplace=True,
+            )
 
             colorder = [
                 'TOTAL_PRICE',
@@ -893,10 +915,15 @@ def create_app():
             # print(mapresults['mapdata'])
             mapdf = pd.DataFrame(mapresults['mapdata'])
             broaddf = broaddf.merge(
-                mapdf, left_on='section', right_on='SK CODE')
+                mapdf, left_on='section', right_on='SK CODE',
+            )
 
-            broaddf.drop(columns=['SK CODE', 'DESC',
-                         'SG ROW START'], inplace=True)
+            broaddf.drop(
+                columns=[
+                    'SK CODE', 'DESC',
+                    'SG ROW START',
+                ], inplace=True,
+            )
             broaddf.rename({'SG CODE': 'section_match'}, inplace=True, axis=1)
         else:
             broaddf['section_match'] = broaddf['section'].apply(
@@ -953,8 +980,11 @@ def create_app():
             'sgmaxseat',
             'sgminseat',
         ]
-        datadf.drop(columns=datadf.columns.difference(
-            colstokeep), axis=1, inplace=True)
+        datadf.drop(
+            columns=datadf.columns.difference(
+                colstokeep,
+            ), axis=1, inplace=True,
+        )
 
         datadf['SECTION_NAME'] = datadf['SECTION_NAME'].convert_dtypes()
         broaddf['section_match'] = broaddf['section_match'].convert_dtypes()
@@ -1090,11 +1120,17 @@ def create_app():
         newdf['bprice'] = newdf['bprice'].astype(float)
         newdf['floor_value'] = newdf['floor_value'].astype(float)
 
-        newdf.drop(['row_match', 'section_match', 'eventid'],
-                   axis=1, inplace=True)
+        newdf.drop(
+            ['row_match', 'section_match', 'eventid'],
+            axis=1, inplace=True,
+        )
 
-        newdf.drop(newdf.loc[newdf['SECTION_NAME']
-                   == 'NA'].index, inplace=True)
+        newdf.drop(
+            newdf.loc[
+                newdf['SECTION_NAME']
+                == 'NA'
+            ].index, inplace=True,
+        )
         meanmindf = newdf.groupby('SECTION_NAME').agg(
             min_fv=('FACE_VALUE', 'min'), mean_fv=('FACE_VALUE', 'mean'),
         )
@@ -1241,7 +1277,8 @@ def create_app():
             print(df['filled_date'].dtype)
             print(df.columns)
             dfrow = pd.DataFrame(
-                df[df['invoiceId'] == str(inid)]).reset_index()
+                df[df['invoiceId'] == str(inid)],
+            ).reset_index()
             dfrow.replace(True, 'True', inplace=True)
             dfrow.replace(False, 'False', inplace=True)
             print(dfrow)
@@ -1361,8 +1398,12 @@ def create_app():
             upinvdf.set_index('invoiceId', inplace=True)
             solddf.update(upinvdf)
             solddf.reset_index(inplace=True)
-            print(solddf.loc[solddf['invoiceId']
-                  == updated_invoice['invoiceId']])
+            print(
+                solddf.loc[
+                    solddf['invoiceId']
+                    == updated_invoice['invoiceId']
+                ],
+            )
             solddict = solddf.to_dict(orient='records')
             soldupdate(solddict)
 
@@ -1482,8 +1523,11 @@ def create_app():
         url = 'https://api.blabla.com/trt.php?token=blabla&tmid=%s' % (tmid)
         response = requests.get(url)
         jsonresponse = response.json()
-        hometeam = jsonresponse['data'][len(
-            jsonresponse['data']) - 1]['eventartist']
+        hometeam = jsonresponse['data'][
+            len(
+                jsonresponse['data'],
+            ) - 1
+        ]['eventartist']
 
         countdf = pd.DataFrame(jsonresponse['section_data'])
         todaydf = countdf.loc[
@@ -1516,17 +1560,20 @@ def create_app():
             sumcount=('count', 'sum'), minprice=('min', 'min'), maxprice=('max', 'max'),
         )
         yesterdaydf = yesterdaydf.merge(
-            yesterdaysumdf, how='left', on='section')
+            yesterdaysumdf, how='left', on='section',
+        )
         todaydf.drop_duplicates(subset=['section'], keep='first', inplace=True)
         yesterdaydf.drop_duplicates(
-            subset=['section'], keep='first', inplace=True)
+            subset=['section'], keep='first', inplace=True,
+        )
         yesterdaydf.reset_index(inplace=True, drop=True)
         todaydf.reset_index(inplace=True, drop=True)
 
         # get new section Drops
         seccolstokeep = ['section']
         todaysecdf = todaydf.drop(
-            todaydf.columns.difference(seccolstokeep), axis=1)
+            todaydf.columns.difference(seccolstokeep), axis=1,
+        )
 
         yesterdaysecdf = yesterdaydf.drop(
             yesterdaydf.columns.difference(seccolstokeep), axis=1,
@@ -1560,7 +1607,8 @@ def create_app():
             ['currency', 'inventoryType', 'offerType', 'dayt', 'tmid', 'section'],
         )
         countsdropdf[colstonumberic] = countsdropdf[colstonumberic].apply(
-            pd.to_numeric)
+            pd.to_numeric,
+        )
 
         countsdropdf['countdiff'] = (
             countsdropdf['sumcount_y'] - countsdropdf['sumcount_x']
@@ -1573,7 +1621,8 @@ def create_app():
         )
         # countsdropdf['diff'] = countsdropdf.apply(lambda x: x['sumcount_y'])
         countsdropdf['drops'] = countsdropdf['countdiff'].apply(
-            lambda x: dropcheck(x))
+            lambda x: dropcheck(x),
+        )
         countsdropdf['dynamic'] = countsdropdf[['mindynamic', 'maxdynamic']].apply(
             lambda x: dynamic(x), axis=1,
         )
@@ -1622,8 +1671,11 @@ def create_app():
             'BG_innotes',
             'unbroad_date',
         ]
-        finaldf.drop(finaldf.columns.difference(
-            colstokeep), axis=1, inplace=True)
+        finaldf.drop(
+            finaldf.columns.difference(
+                colstokeep,
+            ), axis=1, inplace=True,
+        )
 
         client.close()
         print(finaldf)
