@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title> Table </title>              
+        <title> Table </title>
     </head>
     <body>
         <div align="center">
@@ -9,10 +9,10 @@
                 <h1>
                 <!--Displaying the converted table-->
                      {% for table in tables %}
-                    <h2>{{titles[loop.index]}}</h2>                            
+                    <h2>{{titles[loop.index]}}</h2>
                     {{ table|safe }}
-                    {% endfor %}     
-                </h1> 
+                    {% endfor %}
+                </h1>
             </table>
         </div>
     </body>

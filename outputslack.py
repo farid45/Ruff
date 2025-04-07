@@ -1,5 +1,8 @@
-import requests
+from __future__ import annotations
+
 import json
+
+import requests
 
 
 def send_slack_message(payload, webhook):
